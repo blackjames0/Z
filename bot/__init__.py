@@ -172,7 +172,7 @@ USER_SESSION_STRING = environ.get('USER_SESSION_STRING', '')
 if len(USER_SESSION_STRING) != 0:
     info("Creating client from USER_SESSION_STRING")
     user = tgClient('user', TELEGRAM_API, TELEGRAM_HASH, session_string=USER_SESSION_STRING,
-                    parse_mode=enums.ParseMode.HTML, no_updates=True).start()
+                    parse_mode=enums.ParseMode.HTML).start()
     if user.me.is_bot:
         warning(
             "You added bot string for USER_SESSION_STRING this is not allowed! Exiting now")
