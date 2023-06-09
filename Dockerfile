@@ -1,4 +1,4 @@
-FROM dawn001/z_mirror:heroku
+FROM 5hojib/luna:heroku
 
 WORKDIR /usr/src/app
 RUN chmod 777 /usr/src/app

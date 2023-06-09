@@ -6,12 +6,12 @@ from dotenv import load_dotenv
 from sys import executable
 from pymongo import MongoClient
 
-if ospath.exists('Z_Logs.txt'):
-    with open('Z_Logs.txt', 'r+') as f:
+if ospath.exists('logs.txt'):
+    with open('logs.txt', 'r+') as f:
         f.truncate(0)
 
 basicConfig(format='%(levelname)s | From %(name)s -> %(module)s line no: %(lineno)d | %(message)s',
-                    handlers=[FileHandler('Z_Logs.txt'), StreamHandler()], level=INFO)
+                    handlers=[FileHandler('logs.txt'), StreamHandler()], level=INFO)
 
 CONFIG_FILE_URL = environ.get('CONFIG_FILE_URL')
 try:
@@ -53,7 +53,7 @@ if DATABASE_URL:
 
 UPSTREAM_REPO = environ.get('UPSTREAM_REPO', '')
 if len(UPSTREAM_REPO) == 0:
-    UPSTREAM_REPO = 'https://github.com/Dawn-India/Z-Mirror'
+    UPSTREAM_REPO = 'https://github.com/5hojib/Z'
 
 UPSTREAM_BRANCH = environ.get('UPSTREAM_BRANCH', '')
 if len(UPSTREAM_BRANCH) == 0:
@@ -63,8 +63,8 @@ if ospath.exists('.git'):
     srun(["rm", "-rf", ".git"])
 
 update = srun([f"git init -q \
-                 && git config --global user.email dawn-in@z-mirror.live \
-                 && git config --global user.name z-mirror \
+                 && git config --global user.email yesiamshojib@gmail.com \
+                 && git config --global user.name 5hojib \
                  && git add . \
                  && git commit -sm update -q \
                  && git remote add origin {UPSTREAM_REPO} \
