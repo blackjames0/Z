@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from time import time
 
 from bot import LOGGER
@@ -16,7 +17,7 @@ class ExtractStatus:
         self.__start_time = time()
         self.message = self.__listener.message
         self.extra_details = self.__listener.extra_details
-        self.engine = 'p7zip v16.02'
+        self.engine = '7z'
 
     def gid(self):
         return self.__gid

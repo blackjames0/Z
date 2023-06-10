@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from asyncio import gather
 from json import loads
 from random import SystemRandom

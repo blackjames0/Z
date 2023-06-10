@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from pkg_resources import get_distribution
 
 from bot.helper.ext_utils.bot_utils import (MirrorStatus, async_to_sync,
@@ -5,7 +6,7 @@ from bot.helper.ext_utils.bot_utils import (MirrorStatus, async_to_sync,
                                             get_readable_time)
 from bot.helper.ext_utils.fs_utils import get_path_size
 
-engine_ = f"Yt-dlp v{get_distribution('yt-dlp').version}"
+engine_ = f"yt-dlp"
 
 
 class YtDlpDownloadStatus:
@@ -14,15 +15,8 @@ class YtDlpDownloadStatus:
         self.__gid = gid
         self.__listener = listener
         self.message = self.__listener.message
-        self.__isPlayList = self.__obj.is_playlist
         self.extra_details = self.__listener.extra_details
         self.engine = engine_
-
-    def playList(self):
-        if self.__isPlayList:
-            return f"{self.__obj.playlist_index} of {self.__obj.playlist_count}"
-        else:
-            return None
 
     def gid(self):
         return self.__gid

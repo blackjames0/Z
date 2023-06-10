@@ -1,10 +1,13 @@
-from string import ascii_letters
-from random import SystemRandom
+#!/usr/bin/env python3
 from asyncio import sleep
+from random import SystemRandom
+from string import ascii_letters
+
 from telegraph.aio import Telegraph
 from telegraph.exceptions import RetryAfterError
 
 from bot import LOGGER, bot_loop
+
 
 class TelegraphHelper:
     def __init__(self, author_name=None, author_url=None):
@@ -84,7 +87,7 @@ class TelegraphHelper:
                     nxt_page += 1
             await self.edit_page(
                 path=path[prev_page],
-                title='Z Torrent Search',
+                title='Torrent Search',
                 content=content
             )
         return
@@ -102,5 +105,5 @@ class TelegraphHelper:
 
 
 telegraph = TelegraphHelper(
-    'Z-Mirror', 'https://github.com/Dawn-India/Z-Mirror')
+    'Luna', 'https://github.com/5hojib/luna')
 bot_loop.run_until_complete(telegraph.create_account())

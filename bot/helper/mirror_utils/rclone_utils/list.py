@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from asyncio import Event, wait_for, wrap_future
 from configparser import ConfigParser
 from functools import partial

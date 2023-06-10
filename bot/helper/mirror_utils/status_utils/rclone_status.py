@@ -8,7 +8,7 @@ class RcloneStatus:
         self.__status = status
         self.message = message
         self.extra_details = extra_details
-        self.engine = "Rclone v1.62.2"
+        self.engine = "Rclone"
 
     def gid(self):
         return self.__gid

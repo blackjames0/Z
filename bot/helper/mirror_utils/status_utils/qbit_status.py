@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from asyncio import sleep
 
 from bot import LOGGER, QbTorrents, get_client, qb_listener_lock
@@ -14,7 +15,7 @@ def get_download(client, tag):
             f'{e}: Qbittorrent, while getting torrent info. Tag: {tag}')
 
 
-engine_ = f"qBit {get_client().app.version}"
+engine_ = f"qBit"
 
 
 class QbittorrentStatus:

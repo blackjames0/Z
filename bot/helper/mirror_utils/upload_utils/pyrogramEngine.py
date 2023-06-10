@@ -1,5 +1,5 @@
+#!/usr/bin/env python3
 from asyncio import sleep
-from html import escape
 from logging import ERROR, getLogger
 from os import path as ospath
 from os import walk
@@ -82,9 +82,8 @@ class TgUploader:
             if self.__listener.logMessage:
                 self.__sent_msg = await self.__listener.logMessage.copy(DUMP_CHAT_ID)
             else:
-                msg = f'<b>File Name</b>: <code>{escape(self.name)}</code>\n\n<b>#Leech_Completed</b>!\n'
-                msg += f'<b>Done By</b>: {self.__listener.tag}\n'
-                msg += f'<b>User ID</b>: <code>{self.__listener.message.from_user.id}</code>'
+                msg = f'<b><a href="{self.__listener.message.link}">Source</a></b>' if self.__listener.isSuperGroup else self.__listener.message.text
+                msg += f'\n\n<b>#cc</b>: {self.__listener.tag} (<code>{self.__listener.message.from_user.id}</code>)'
                 self.__sent_msg = await bot.send_message(DUMP_CHAT_ID, msg, disable_web_page_preview=True)
             if self.__listener.dmMessage:
                 self.__sent_DMmsg = self.__listener.dmMessage
@@ -115,14 +114,18 @@ class TgUploader:
         if self.__sent_msg is None:
             await self.__listener.onUploadError('Cannot find the message to reply')
             return False
+        if ((self.__listener.isSuperGroup or config_dict['DUMP_CHAT_ID']) and not IS_PREMIUM_USER and not self.__sent_msg.chat.has_protected_content):
+            btn = ButtonMaker()
+            btn.ibutton('Save This File', 'save', 'footer')
+            self.__button = btn.build_menu(1)
         return True
 
     async def __prepare_file(self, file_, dirpath):
         if self.__lprefix:
             cap_mono = f"{self.__lprefix} <code>{file_}</code>"
             self.__lprefix = re_sub('<.*?>', '', self.__lprefix)
-            if self.__listener.seed and not self.__listener.newDir and not dirpath.endswith("/splited_files_z"):
-                dirpath = f'{dirpath}/copied_z'
+            if self.__listener.seed and not self.__listener.newDir and not dirpath.endswith("/splited_files_luna"):
+                dirpath = f'{dirpath}/copied_luna'
                 await makedirs(dirpath, exist_ok=True)
                 new_path = ospath.join(dirpath, f"{self.__lprefix} {file_}")
                 self.__up_path = await copy(self.__up_path, new_path)
@@ -148,8 +151,8 @@ class TgUploader:
             extn = len(ext)
             remain = 60 - extn
             name = name[:remain]
-            if self.__listener.seed and not self.__listener.newDir and not dirpath.endswith("/splited_files_z"):
-                dirpath = f'{dirpath}/copied_z'
+            if self.__listener.seed and not self.__listener.newDir and not dirpath.endswith("/splited_files_luna"):
+                dirpath = f'{dirpath}/copied_luna'
                 await makedirs(dirpath, exist_ok=True)
                 new_path = ospath.join(dirpath, f"{name}{ext}")
                 self.__up_path = await copy(self.__up_path, new_path)
@@ -259,7 +262,7 @@ class TgUploader:
                 finally:
                     if not self.__is_cancelled and await aiopath.exists(self.__up_path) and \
                         (not self.__listener.seed or self.__listener.newDir or
-                         dirpath.endswith("/splited_files_z") or '/copied_z/' in self.__up_path):
+                         dirpath.endswith("/splited_files_luna") or '/copied_luna/' in self.__up_path):
                         await aioremove(self.__up_path)
         for key, value in list(self.__media_dict.items()):
             for subkey, msgs in list(value.items()):
@@ -270,27 +273,27 @@ class TgUploader:
         if self.__listener.seed and not self.__listener.newDir:
             await clean_unwanted(self.__path)
         if self.__total_files == 0:
-            await self.__listener.onUploadError("No files to upload.")
+            await self.__listener.onUploadError("No files to upload. In case you have filled EXTENSION_FILTER, then check if all files have those extensions or not.")
             return
         if self.__total_files <= self.__corrupted:
-            await self.__listener.onUploadError('Files Corrupted or unable to upload.')
+            await self.__listener.onUploadError('Files Corrupted or unable to upload. Check logs!')
             return
         if config_dict['DUMP_CHAT_ID']:
-            msg = f'<b>File Name</b>: <code>{escape(self.name)}</code>\n\n'
-            msg += f'<b>LeechCompleted</b>!\n<b>Done By</b>: {self.__listener.tag}\n'
-            msg += f'<b>User ID</b>: <code>{self.__listener.message.from_user.id}</code>'
-            if self.__sent_msg is not None:
-                await self.__sent_msg.reply(text=msg, quote=True, disable_web_page_preview=True)
+            msg = f'<b><a href="{self.__listener.message.link}">Source</a></b>' if self.__listener.isSuperGroup else self.__listener.message.text
+            msg = f'{msg}\n\n<b>#LeechCompleted</b>: {self.__listener.tag} #id{self.__listener.message.from_user.id}'
+            await self.__sent_msg.reply(text=msg, quote=True, disable_web_page_preview=True)
         LOGGER.info(f"Leech Completed: {self.name}")
         await self.__listener.onUploadComplete(None, size, self.__msgs_dict, self.__total_files, self.__corrupted, self.name)
 
     async def __switching_client(self, f_size):
-        if f_size < 2097152000 and not self.__sent_msg._client.me.is_bot:
-            LOGGER.info(f'Upload using BOT_SESSION: size {get_readable_file_size(f_size)}')
-            self.__sent_msg = await bot.get_messages(chat_id=self.__sent_msg.chat.id, message_ids=self.__sent_msg.id)
         if f_size > 2097152000 and IS_PREMIUM_USER and self.__sent_msg._client.me.is_bot:
-            LOGGER.info(f'Upload using USER_SESSION: size {get_readable_file_size(f_size)}')
+            LOGGER.info(
+                f'Trying to upload file greater than {get_readable_file_size(f_size)} fetching message for user client')
             self.__sent_msg = await user.get_messages(chat_id=self.__sent_msg.chat.id, message_ids=self.__sent_msg.id)
+        if f_size < 2097152000 and not self.__sent_msg._client.me.is_bot:
+            LOGGER.info(
+                f'Trying to upload file less than {get_readable_file_size(f_size)} fetching message for bot client')
+            self.__sent_msg = await bot.get_messages(chat_id=self.__sent_msg.chat.id, message_ids=self.__sent_msg.id)
 
     async def __send_dm(self):
         try:
@@ -352,8 +355,8 @@ class TgUploader:
                     height = 320
                 if not self.__up_path.upper().endswith(("MKV", "MP4")):
                     dirpath, file_ = self.__up_path.rsplit('/', 1)
-                    if self.__listener.seed and not self.__listener.newDir and not dirpath.endswith("/splited_files_z"):
-                        dirpath = f"{dirpath}/copied_z"
+                    if self.__listener.seed and not self.__listener.newDir and not dirpath.endswith("/splited_files_luna"):
+                        dirpath = f"{dirpath}/copied_luna"
                         await makedirs(dirpath, exist_ok=True)
                         new_path = ospath.join(
                             dirpath, f"{ospath.splitext(file_)[0]}.mp4")
@@ -447,4 +450,4 @@ class TgUploader:
     async def cancel_download(self):
         self.__is_cancelled = True
         LOGGER.info(f"Cancelling Upload: {self.name}")
-        await self.__listener.onUploadError('Leech stopped by user!')
+        await self.__listener.onUploadError('your upload has been stopped!')

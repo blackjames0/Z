@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from random import SystemRandom
 from string import ascii_letters, digits
 
@@ -26,7 +27,6 @@ async def add_gd_download(link, path, listener, newname):
     msg, button = await stop_duplicate_check(name, listener)
     if msg:
         await sendMessage(listener.message, msg, button)
-        await delete_links(listener.message)
         return
     if limit_exceeded := await limit_checker(size, listener, isDriveLink=True):
         await sendMessage(listener.message, limit_exceeded)

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from time import time
 
 from aiofiles.os import path as aiopath
@@ -13,7 +14,6 @@ from bot.helper.telegram_helper.message_utils import (delete_links,
                                                       deleteMessage,
                                                       sendMessage,
                                                       sendStatusMessage)
-
 
 """
 Only v1 torrents
@@ -55,8 +55,7 @@ async def add_qb_torrent(link, path, listener, ratio, seed_time):
                     if len(tor_info) > 0:
                         break
                     elif time() - ADD_TIME >= 120:
-                        msg = "Not added! Check if the link is valid or not. \
-\nIf it's torrent file then report, this happens if torrent file size above 10mb."
+                        msg = "Not added! Check if the link is valid or not. If it's torrent file then report, this happens if torrent file size above 10mb."
                         await sendMessage(listener.message, msg)
                         await delete_links(listener.message)
                         return
@@ -105,9 +104,7 @@ async def add_qb_torrent(link, path, listener, ratio, seed_time):
             if not added_to_queue:
                 await sync_to_async(client.torrents_pause, torrent_hashes=ext_hash)
             SBUTTONS = bt_selection_buttons(ext_hash)
-            msg = f"<b>Name</b>: <code>{tor_info.name}</code>\n\nYour download paused. \
-Choose files then press Done Selecting button to start downloading. \
-\n<b><i>Your download will not start automatically</i></b>"
+            msg = "Your download paused. Choose files then press Done Selecting button to start downloading."
             await sendMessage(listener.message, msg, SBUTTONS)
         else:
             await sendStatusMessage(listener.message)

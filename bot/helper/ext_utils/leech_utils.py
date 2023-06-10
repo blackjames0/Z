@@ -112,7 +112,7 @@ async def split_file(path, size, file_, dirpath, split_size, listener, start_tim
     if listener.suproc == 'cancelled' or listener.suproc is not None and listener.suproc.returncode == -9:
         return False
     if listener.seed and not listener.newDir:
-        dirpath = f"{dirpath}/splited_files"
+        dirpath = f"{dirpath}/splited_files_luna"
         if not await aiopath.exists(dirpath):
             await mkdir(dirpath)
     user_id = listener.message.from_user.id

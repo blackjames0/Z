@@ -8,7 +8,6 @@ from https://github.com/AvinashReddy3108/PaperplaneExtended . I hereby take no c
 than the modifications. See https://github.com/AvinashReddy3108/PaperplaneExtended/commits/master/userbot/modules/direct_links.py
 for original authorship. """
 
-import tenacity
 from http.cookiejar import MozillaCookieJar
 from json import loads
 from os import path
@@ -16,6 +15,7 @@ from re import findall, match, search, sub
 from time import sleep
 from urllib.parse import parse_qs, quote, unquote, urlparse
 from uuid import uuid4
+
 from bs4 import BeautifulSoup
 from cloudscraper import create_scraper
 from lk21 import Bypass
@@ -24,7 +24,6 @@ from lxml import etree
 from bot import config_dict
 from bot.helper.ext_utils.bot_utils import get_readable_time, is_share_link
 from bot.helper.ext_utils.exceptions import DirectDownloadLinkException
-from bot.helper.telegram_helper.message_utils import deleteMessage
 
 fmed_list = ['fembed.net', 'fembed.com', 'femax20.com', 'fcdn.stream', 'feurl.com', 'layarkacaxxi.icu',
              'naniplay.nanime.in', 'naniplay.nanime.biz', 'naniplay.com', 'mm9842.com']
@@ -84,7 +83,7 @@ def direct_link_generator(link: str):
         return wetransfer(link)
     elif any(x in domain for x in anonfilesBaseSites):
         return anonfilesBased(link)
-    elif any(x in domain for x in ['terabox', 'nephobox', '4funbox', 'mirrobox', '1024tera']):
+    elif any(x in domain for x in ['terabox', 'nephobox', '4funbox', 'mirrobox', 'momerybox', 'teraboxapp', '1024tera']):
         return terabox(link)
     elif any(x in domain for x in fmed_list):
         return fembed(link)
@@ -120,7 +119,6 @@ def yandex_disk(url: str) -> str:
             "ERROR: File not found/Download limit reached")
 
 
-@tenacity.retry(wait=tenacity.wait_fixed(600), stop=tenacity.stop_after_attempt(2))
 def uptobox(url: str) -> str:
     """ Uptobox direct link generator
     based on https://github.com/jovanzers/WinTenCermin and https://github.com/sinoobie/noobie-mirror """
@@ -133,7 +131,7 @@ def uptobox(url: str) -> str:
     cget = create_scraper().request
     try:
         file_id = findall(r'\bhttps?://.*uptobox\.com/(\w+)', url)[0]
-        if UPTOBOX_TOKEN := config_dict.get('UPTOBOX_TOKEN'):
+        if UPTOBOX_TOKEN := config_dict['UPTOBOX_TOKEN']:
             file_link = f'https://uptobox.com/api/link?token={UPTOBOX_TOKEN}&file_code={file_id}'
         else:
             file_link = f'https://uptobox.com/api/link?file_code={file_id}'

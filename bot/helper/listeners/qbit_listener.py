@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from asyncio import sleep
 from time import time
 
@@ -11,7 +12,7 @@ from bot.helper.ext_utils.fs_utils import clean_unwanted
 from bot.helper.ext_utils.task_manager import (limit_checker,
                                                stop_duplicate_check)
 from bot.helper.mirror_utils.status_utils.qbit_status import QbittorrentStatus
-from bot.helper.telegram_helper.message_utils import update_all_messages, delete_links
+from bot.helper.telegram_helper.message_utils import update_all_messages
 
 
 async def __remove_torrent(client, hash_, tag):
@@ -61,7 +62,6 @@ async def __stop_duplicate(tor):
     msg, button = await stop_duplicate_check(name, listener)
     if msg:
         __onDownloadError(msg, tor, button)
-        await delete_links(listener.message)
 
 
 @new_task
@@ -72,7 +72,6 @@ async def __size_checked(tor):
         size = tor.size
         if limit_exceeded := await limit_checker(size, listener, True):
             await __onDownloadError(limit_exceeded, tor)
-            await delete_links(listener.message)
 
 
 @new_task
