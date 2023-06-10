@@ -259,7 +259,7 @@ async def edit_user_settings(client, query):
 Send YT-DLP Options. Timeout: 60 sec
 Format: key:value|key:value|key:value.
 Example: format:bv*+mergeall[vcodec=none]|nocheckcertificate:True
-Check all yt-dlp api options from this <a href='https://github.com/yt-dlp/yt-dlp/blob/master/yt_dlp/YoutubeDL.py#L184'>FILE</a> or use this <a href='https://t.me/mltb_official/177'>script</a> to convert cli arguments to api options.
+Check all yt-dlp api options from this <a href='https://github.com/yt-dlp/yt-dlp/blob/master/yt_dlp/YoutubeDL.py#L184'>FILE</a>
         '''
         await editMessage(message, rmsg, buttons.build_menu(1))
         pfunc = partial(set_yt_options, pre_event=query)
@@ -349,13 +349,13 @@ Check all yt-dlp api options from this <a href='https://github.com/yt-dlp/yt-dlp
         rmsg = f'''
 Send Leech Prefix. Timeout: 60 sec
 Examples:
-1. <code>{escape('<b>@JMDKH_Team</b>')}</code> 
+1. <code>{escape('<b>@boom</b>')}</code> 
 This will give output of:
-<b>@JMDKH_Team</b>  <code>50MB.bin</code>.
+<b>@boom</b>  <code>50MB.bin</code>.
 
-2. <code>{escape('<code>@JMDKH_Team</code>')}</code> 
+2. <code>{escape('<code>@boom</code>')}</code> 
 This will give output of:
-<code>@JMDKH_Team</code> <code>50MB.bin</code>.
+<code>@boom</code> <code>50MB.bin</code>.
 
 Check all available formatting options <a href="https://core.telegram.org/bots/api#formatting-options">HERE</a>.
         '''

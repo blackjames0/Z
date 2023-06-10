@@ -20,7 +20,7 @@ from bot.helper.ext_utils.bot_utils import (get_readable_file_size,
                                             is_rclone_path, is_url, new_task,
                                             new_thread, sync_to_async)
 from bot.helper.ext_utils.help_messages import YT_HELP_MESSAGE
-from bot.helper.jmdkh_utils import none_admin_utils, stop_duplicate_tasks
+from bot.helper.luna_utils import none_admin_utils, stop_duplicate_tasks
 from bot.helper.listeners.tasks_listener import MirrorLeechListener
 from bot.helper.mirror_utils.download_utils.yt_dlp_download import YoutubeDLHelper
 from bot.helper.mirror_utils.rclone_utils.list import RcloneList

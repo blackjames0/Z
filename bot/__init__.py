@@ -86,7 +86,7 @@ if len(DATABASE_URL) == 0:
 
 if DATABASE_URL:
     conn = MongoClient(DATABASE_URL)
-    db = conn.mltb
+    db = conn.luna
     # return config dict (all env vars)
     if config_dict := db.settings.config.find_one({'_id': bot_id}):
         del config_dict['_id']
