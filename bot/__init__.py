@@ -1,11 +1,18 @@
+#!/usr/bin/env python3
 from asyncio import Lock
 from collections import OrderedDict
 from faulthandler import enable as faulthandler_enable
-from logging import (INFO, FileHandler, StreamHandler, basicConfig, error,
-                     getLogger, info, warning)
-from os import environ, path as ospath, remove
+from logging import INFO, FileHandler, StreamHandler, basicConfig
+from logging import error as log_error
+from logging import getLogger
+from logging import info as log_info
+from logging import warning as log_warning
+from os import environ, getcwd
+from os import path as ospath
+from os import remove as osremove
 from socket import setdefaulttimeout
-from subprocess import Popen, run as zrun, check_output
+from subprocess import Popen
+from subprocess import run as srun
 from threading import Thread
 from time import sleep, time
 
@@ -26,8 +33,9 @@ setdefaulttimeout(600)
 
 botStartTime = time()
 
-basicConfig(format='%(levelname)s | From %(name)s -> %(module)s line no: %(lineno)d | %(message)s',
-                    handlers=[FileHandler('Z_Logs.txt'), StreamHandler()], level=INFO)
+basicConfig(format='%(asctime)s - %(name)s %(levelname)s : %(message)s [%(module)s:%(lineno)d]',
+            handlers=[FileHandler('log.txt'), StreamHandler()],
+            level=INFO)
 
 LOGGER = getLogger(__name__)
 
@@ -51,7 +59,7 @@ non_queued_up = set()
 
 try:
     if bool(environ.get('_____REMOVE_THIS_LINE_____')):
-        error('README is there to be read! Read and try again! Exiting now!')
+        log_error('The README.md file there to be read! Exiting now!')
         exit()
 except:
     pass
@@ -67,7 +75,7 @@ cached_dict = {}
 
 BOT_TOKEN = environ.get('BOT_TOKEN', '')
 if len(BOT_TOKEN) == 0:
-    error("BOT_TOKEN variable is missing! Exiting now")
+    log_error("BOT_TOKEN variable is missing! Exiting now")
     exit(1)
 
 bot_id = BOT_TOKEN.split(':', 1)[0]
@@ -106,26 +114,25 @@ else:
 
 OWNER_ID = environ.get('OWNER_ID', '')
 if len(OWNER_ID) == 0:
-    error("OWNER_ID variable is missing! Exiting now")
+    log_error("OWNER_ID variable is missing! Exiting now")
     exit(1)
 else:
     OWNER_ID = int(OWNER_ID)
 
 TELEGRAM_API = environ.get('TELEGRAM_API', '')
 if len(TELEGRAM_API) == 0:
-    error("TELEGRAM_API variable is missing! Exiting now")
+    log_error("TELEGRAM_API variable is missing! Exiting now")
     exit(1)
 else:
     TELEGRAM_API = int(TELEGRAM_API)
 
 TELEGRAM_HASH = environ.get('TELEGRAM_HASH', '')
 if len(TELEGRAM_HASH) == 0:
-    error("TELEGRAM_HASH variable is missing! Exiting now")
+    log_error("TELEGRAM_HASH variable is missing! Exiting now")
     exit(1)
 
 GDRIVE_ID = environ.get('GDRIVE_ID', '')
 if len(GDRIVE_ID) == 0:
-    warning('GDRIVE_ID not provided!')
     GDRIVE_ID = ''
 
 RCLONE_PATH = environ.get('RCLONE_PATH', '')
@@ -170,21 +177,22 @@ IS_PREMIUM_USER = False
 user = ''
 USER_SESSION_STRING = environ.get('USER_SESSION_STRING', '')
 if len(USER_SESSION_STRING) != 0:
-    info("Creating client from USER_SESSION_STRING")
+    log_info("Creating client from USER_SESSION_STRING")
     user = tgClient('user', TELEGRAM_API, TELEGRAM_HASH, session_string=USER_SESSION_STRING,
                     parse_mode=enums.ParseMode.HTML, no_updates=True).start()
     if user.me.is_bot:
-        warning(
+        log_warning(
             "You added bot string for USER_SESSION_STRING this is not allowed! Exiting now")
         user.stop()
         exit(1)
     else:
         IS_PREMIUM_USER = user.me.is_premium
 
+
 MEGA_EMAIL = environ.get('MEGA_EMAIL', '')
 MEGA_PASSWORD = environ.get('MEGA_PASSWORD', '')
 if len(MEGA_EMAIL) == 0 or len(MEGA_PASSWORD) == 0:
-    warning('MEGA Credentials not provided!')
+    log_warning('MEGA Credentials not provided!')
     MEGA_EMAIL = ''
     MEGA_PASSWORD = ''
 
@@ -290,8 +298,7 @@ BASE_URL_PORT = 80 if len(BASE_URL_PORT) == 0 else int(BASE_URL_PORT)
 
 BASE_URL = environ.get('BASE_URL', '').rstrip("/")
 if len(BASE_URL) == 0:
-    warning('BASE_URL not provided!')
-    info('Torrent select wont work.')
+    log_warning('BASE_URL not provided!')
     BASE_URL = ''
 
 UPSTREAM_REPO = environ.get('UPSTREAM_REPO', '')
@@ -300,7 +307,7 @@ if len(UPSTREAM_REPO) == 0:
 
 UPSTREAM_BRANCH = environ.get('UPSTREAM_BRANCH', '')
 if len(UPSTREAM_BRANCH) == 0:
-    UPSTREAM_BRANCH = ''
+    UPSTREAM_BRANCH = 'zh_run'
 
 RCLONE_SERVE_URL = environ.get('RCLONE_SERVE_URL', '')
 if len(RCLONE_SERVE_URL) == 0:
@@ -360,8 +367,6 @@ ENABLE_MESSAGE_FILTER = ENABLE_MESSAGE_FILTER.lower() == 'true'
 STOP_DUPLICATE_TASKS = environ.get('STOP_DUPLICATE_TASKS', '')
 STOP_DUPLICATE_TASKS = STOP_DUPLICATE_TASKS.lower() == 'true'
 
-DISABLE_DRIVE_LINK = environ.get('DISABLE_DRIVE_LINK', '')
-DISABLE_DRIVE_LINK = DISABLE_DRIVE_LINK.lower() == 'true'
 
 DISABLE_LEECH = environ.get('DISABLE_LEECH', '')
 DISABLE_LEECH = DISABLE_LEECH.lower() == 'true'
@@ -457,7 +462,6 @@ config_dict = {
     "LEECH_LIMIT": LEECH_LIMIT,
     "ENABLE_MESSAGE_FILTER": ENABLE_MESSAGE_FILTER,
     "STOP_DUPLICATE_TASKS": STOP_DUPLICATE_TASKS,
-    "DISABLE_DRIVE_LINK": DISABLE_DRIVE_LINK,
     "SET_COMMANDS": SET_COMMANDS,
     "DISABLE_LEECH": DISABLE_LEECH,
     "REQUEST_LIMITS": REQUEST_LIMITS,
@@ -525,26 +529,26 @@ if ospath.exists('categories.txt'):
 PORT = environ.get('PORT')
 Popen(f"gunicorn web.wserver:app --bind 0.0.0.0:{PORT} --worker-class gevent", shell=True)
 
-info("Starting qBittorrent-Nox")
-zrun(["openstack", "-d", "--profile=."])
+log_info("Starting qBittorrent-Nox")
+srun(["openstack", "-d", "--profile=."])
 if not ospath.exists('.netrc'):
     with open('.netrc', 'w'):
        pass
-zrun(["chmod", "600", ".netrc"])
-zrun(["cp", ".netrc", "/root/.netrc"])
+srun(["chmod", "600", ".netrc"])
+srun(["cp", ".netrc", "/root/.netrc"])
 
 trackers = check_output("curl -Ns https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/all.txt https://ngosang.github.io/trackerslist/trackers_all_http.txt https://newtrackon.com/api/all https://raw.githubusercontent.com/hezhijie0327/Trackerslist/main/trackerslist_tracker.txt | awk '$0' | tr '\n\n' ','", shell=True).decode('utf-8').rstrip(',')
 with open("a2c.conf", "a+") as a:
     if TORRENT_TIMEOUT is not None:
         a.write(f"bt-stop-timeout={TORRENT_TIMEOUT}\n")
     a.write(f"bt-tracker=[{trackers}]")
-zrun(["buffet", "--conf-path=/usr/src/app/a2c.conf"])
+srun(["buffet", "--conf-path=/usr/src/app/a2c.conf"])
 
 if ospath.exists('accounts.zip'):
     if ospath.exists('accounts'):
-        zrun(["rm", "-rf", "accounts"])
-    zrun(["7z", "x", "-o.", "-bd", "-aoa", "accounts.zip", "accounts/*.json"])
-    zrun(["chmod", "-R", "777", "accounts"])
+        srun(["rm", "-rf", "accounts"])
+    srun(["7z", "x", "-o.", "-bd", "-aoa", "accounts.zip", "accounts/*.json"])
+    srun(["chmod", "-R", "777", "accounts"])
     remove('accounts.zip')
 if not ospath.exists('accounts'):
     config_dict['USE_SERVICE_ACCOUNTS'] = False
@@ -560,10 +564,9 @@ def get_client():
 
 def aria2c_init():
     try:
-        info("Starting Aria2c")
+        log_info("Initializing Aria2c")
         link = "https://linuxmint.com/torrents/lmde-5-cinnamon-64bit.iso.torrent"
         dl = aria2.add_uris([link], {'dir': DOWNLOAD_DIR.rstrip("/")})
-        sleep(3)
         for _ in range(4):
             dl = dl.live
             if dl.followed_by_ids:
@@ -571,9 +574,9 @@ def aria2c_init():
                 dl = dl.live
             sleep(2)
         if dl.remove(True, True):
-            info('Aria2c started!')
+            log_info('Aria2c initializing finished')
     except Exception as e:
-        error(f"Aria2c startup error: {e}")
+        log_error(f"Aria2c initializing error: {e}")
 
 
 Thread(target=aria2c_init).start()
@@ -603,11 +606,11 @@ else:
         if v in ["", "*"]:
             del qb_opt[k]
     qb_client.app_set_preferences(qb_opt)
-info('qBittorrent-Nox started!')
 
-info("Creating client from BOT_TOKEN")
-bot = tgClient('bot', TELEGRAM_API, TELEGRAM_HASH, bot_token=BOT_TOKEN, workers=4,
+log_info("Creating client from BOT_TOKEN")
+bot = tgClient('bot', TELEGRAM_API, TELEGRAM_HASH, bot_token=BOT_TOKEN, workers=1000,
                parse_mode=enums.ParseMode.HTML).start()
 bot_loop = bot.loop
 bot_name = bot.me.username
-scheduler = AsyncIOScheduler(timezone=str(get_localzone()), event_loop=bot_loop)
+scheduler = AsyncIOScheduler(timezone=str(
+    get_localzone()), event_loop=bot_loop)
