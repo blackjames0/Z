@@ -119,18 +119,21 @@ async def get_telegraph_list(telegraph_content):
     buttons = extra_btns(buttons)
     return buttons.build_menu(1)
 
-
-def get_progress_bar_string(pct):
+def progress_bar(pct):
     pct = float(pct.strip('%'))
     p = min(max(pct, 0), 100)
-    cFull = int(p // 8)
-    p_str = '■' * cFull
-    p_str += '□' * (12 - cFull)
-    return f"[{p_str}]"
-
+    cFull = int(p / 10)
+    cIncomplete = int(round((p / 10 - cFull) * 4))
+    p_str = '●' * cFull
+    if cIncomplete > 0:
+        s = '◔◑◕●'
+        incomplete_char = s[cIncomplete - 1]
+        p_str += incomplete_char
+    p_str += '○' * (10 - len(p_str))
+    return p_str
 
 def get_readable_message():
-    msg = ""
+    msg = "<b>Powered by Luna</b>\n\n"
     button = None
     STATUS_LIMIT = config_dict['STATUS_LIMIT']
     tasks = len(download_dict)
@@ -139,64 +142,63 @@ def get_readable_message():
         globals()['STATUS_START'] = STATUS_LIMIT * (PAGES - 1)
         globals()['PAGE_NO'] = PAGES
     for download in list(download_dict.values())[STATUS_START:STATUS_LIMIT+STATUS_START]:
-        msg += f"<b>{download.status()}</b>: <code>{escape(f'{download.name()}')}</code>"
+        msg += f"<i>{escape(f'{download.name()}')}\nby {download.extra_details['source']}</i>\n\n"
+        msg += f"<b>┌ {download.status()} with {download.engine}</b>"
         if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING]:
-            msg += f"\n{get_progress_bar_string(download.progress())} {download.progress()}"
-            msg += f"\n<b>Processed</b>: {download.processed_bytes()} of {download.size()}"
-            msg += f"\n<b>Speed</b>: {download.speed()} | <b>ETA</b>: {download.eta()}"
+            msg += f"\n<b>├ <a href='https://github.com/5hojib/Luna'>{progress_bar(download.progress())}</a></b> {download.progress()}"
+            msg += f"\n<b>├ </b>{download.processed_bytes()} of {download.size()}"
+            msg += f"\n<b>├ Speed</b>: {download.speed()}"
+            msg += f'\n<b>├ Estimated</b>: {download.eta()}'
             if hasattr(download, 'seeders_num'):
                 try:
-                    msg += f"\n<b>Seeders</b>: {download.seeders_num()} | <b>Leechers</b>: {download.leechers_num()}"
+                    msg += f"\n<b>├ Seeders</b>: {download.seeders_num()} | <b>Leechers</b>: {download.leechers_num()}"
                 except:
                     pass
         elif download.status() == MirrorStatus.STATUS_SEEDING:
-            msg += f"\n<b>Size</b>: {download.size()}"
-            msg += f"\n<b>Speed</b>: {download.upload_speed()}"
-            msg += f" | <b>Uploaded</b>: {download.uploaded_bytes()}"
-            msg += f"\n<b>Ratio</b>: {download.ratio()}"
-            msg += f" | <b>Time</b>: {download.seeding_time()}"
+            msg += f"\n<b>├ Size</b>: {download.size()}"
+            msg += f"\n<b>├ Speed</b>: {download.upload_speed()}"
+            msg += f"\n<b>├ Uploaded</b>: {download.uploaded_bytes()}"
+            msg += f"\n<b>├ Ratio</b>: {download.ratio()}"
+            msg += f"\n<b>├ Time</b>: {download.seeding_time()}"
         else:
-            msg += f"\n<b>Size</b>: {download.size()}"
-        msg += f"\n<b>Source</b>: {download.extra_details['source']}"
-        msg += f"\n<b>Elapsed</b>: {get_readable_time(time() - download.extra_details['startTime'])}"
-        msg += f"\n<b>Engine</b>: {download.engine}"
-        msg += f"\n<b>Upload</b>: {download.extra_details['mode']}"
-        msg += f"\n<b>Stop</b>: <code>/{BotCommands.CancelMirror} {download.gid()}</code>\n\n"
+            msg += f"\n<b>├ Size</b>: {download.size()}"
+        msg += f"\n<b>├ Elapsed</b>: {get_readable_time(time() - download.extra_details['startTime'])}"
+        msg += f"\n<b>└ </b><code>/{BotCommands.CancelMirror} {download.gid()}</code>\n\n"
     if len(msg) == 0:
         return None, None
     dl_speed = 0
     up_speed = 0
     for download in download_dict.values():
-        tstatus = download.status()
-        if tstatus == MirrorStatus.STATUS_DOWNLOADING:
-            spd = download.speed()
-            if 'K' in spd:
-                dl_speed += float(spd.split('K')[0]) * 1024
-            elif 'M' in spd:
-                dl_speed += float(spd.split('M')[0]) * 1048576
-        elif tstatus == MirrorStatus.STATUS_UPLOADING:
-            spd = download.speed()
-            if 'K' in spd:
-                up_speed += float(spd.split('K')[0]) * 1024
-            elif 'M' in spd:
-                up_speed += float(spd.split('M')[0]) * 1048576
-        elif tstatus == MirrorStatus.STATUS_SEEDING:
-            spd = download.upload_speed()
-            if 'K' in spd:
-                up_speed += float(spd.split('K')[0]) * 1024
-            elif 'M' in spd:
-                up_speed += float(spd.split('M')[0]) * 1048576
+            tstatus = download.status()
+            if tstatus == MirrorStatus.STATUS_DOWNLOADING:
+                spd = download.speed()
+                if 'K' in spd:
+                    dl_speed += float(spd.split('K')[0]) * 1024
+                elif 'M' in spd:
+                    dl_speed += float(spd.split('M')[0]) * 1048576
+            elif tstatus == MirrorStatus.STATUS_UPLOADING:
+                spd = download.speed()
+                if 'K' in spd:
+                    up_speed += float(spd.split('K')[0]) * 1024
+                elif 'M' in spd:
+                    up_speed += float(spd.split('M')[0]) * 1048576
+            elif tstatus == MirrorStatus.STATUS_SEEDING:
+                spd = download.upload_speed()
+                if 'K' in spd:
+                    up_speed += float(spd.split('K')[0]) * 1024
+                elif 'M' in spd:
+                    up_speed += float(spd.split('M')[0]) * 1048576
     if tasks > STATUS_LIMIT:
         buttons = ButtonMaker()
-        buttons.ibutton("<<", "status pre")
-        buttons.ibutton(f"{PAGE_NO}/{PAGES} ({tasks})", "status ref")
-        buttons.ibutton(">>", "status nex")
+        buttons.ibutton("Prev", "status pre")
+        buttons.ibutton(f"{PAGE_NO}/{PAGES}", "status ref")
+        buttons.ibutton("Next", "status nex")
         button = buttons.build_menu(3)
-    msg += f"<b>CPU</b>: {cpu_percent()}% | <b>FREE</b>: {get_readable_file_size(disk_usage(config_dict['DOWNLOAD_DIR']).free)}"
-    msg += f"\n<b>RAM</b>: {virtual_memory().percent}% | <b>UPTIME</b>: {get_readable_time(time() - botStartTime)}"
-    msg += f"\n<b>DL</b>: {get_readable_file_size(dl_speed)}/s | <b>UL</b>: {get_readable_file_size(up_speed)}/s"
+    msg += f"<b>• Tasks running</b>: {tasks}"
+    msg += f"\n<b>• Free disk space</b>: {get_readable_file_size(disk_usage(config_dict['DOWNLOAD_DIR']).free)}"
+    msg += f"\n<b>• Uploading speed</b>: {get_readable_file_size(up_speed)}/s"
+    msg += f"\n<b>• Downloading speed</b>: {get_readable_file_size(dl_speed)}/s"
     return msg, button
-
 
 async def turn_page(data):
     STATUS_LIMIT = config_dict['STATUS_LIMIT']
@@ -219,14 +221,16 @@ async def turn_page(data):
 
 
 def get_readable_time(seconds):
-    periods = [('d', 86400), ('h', 3600), ('m', 60), ('s', 1)]
+    periods = [('cosmic year', 31557600000000000), ('galactic year', 225000000000000000), ('aeon', 31536000000000000), ('epoch', 315360000000), ('millennium', 31536000000), ('century', 3153600000), ('decade', 315360000), ('year', 31536000), ('month', 2592000), ('week', 604800), ('day', 86400), ('hour', 3600), ('minute', 60), ('second', 1)]
     result = ''
     for period_name, period_seconds in periods:
         if seconds >= period_seconds:
             period_value, seconds = divmod(seconds, period_seconds)
-            result += f'{int(period_value)}{period_name}'
-    return result
-
+            plural_suffix = 's' if period_value > 1 else ''
+            result += f'{int(period_value)} {period_name}{plural_suffix} '
+            if len(result.split()) == 2:
+                break
+    return result.strip()
 
 def is_magnet(url):
     return bool(re_match(MAGNET_REGEX, url))
@@ -290,6 +294,7 @@ async def check_user_tasks(user_id, maxtask):
 
 
 def checking_access(user_id, button=None):
+    token_timeout = config_dict['TOKEN_TIMEOUT']
     if not config_dict['TOKEN_TIMEOUT']:
         return None, button
     user_data.setdefault(user_id, {})
@@ -302,12 +307,24 @@ def checking_access(user_id, button=None):
             del data['time']
         data['token'] = token
         user_data[user_id].update(data)
+        time_str = format_validity_time(token_timeout)
         if button is None:
             button = ButtonMaker()
-        button.ubutton('Refresh Token', short_url(f'https://t.me/{bot_name}?start={token}'))
-        return 'Token is expired, refresh your token and try again.', button
+        button.ubutton('Collect token', short_url(f'https://telegram.me/{bot_name}?start={token}'))
+        return f'Your token has expired, please collect a new token.\n\n<b>It will expire after {time_str}</b>', button
     return None, button
 
+def format_validity_time(seconds):
+    if seconds is None:
+        return "Invalid input: seconds cannot be None"
+    periods = [('cosmic year', 31557600000000000), ('galactic year', 225000000000000000), ('aeon', 31536000000000000), ('epoch', 315360000000), ('millennium', 31536000000), ('century', 3153600000), ('decade', 315360000), ('year', 31536000), ('month', 2592000), ('week', 604800), ('day', 86400), ('hour', 3600), ('minute', 60), ('second', 1)]
+    result = ''
+    for period_name, period_seconds in periods:
+        if seconds >= period_seconds:
+            period_value, seconds = divmod(seconds, period_seconds)
+            plural_suffix = 's' if period_value > 1 else ''
+            result += f'{int(period_value)} {period_name}{plural_suffix} '
+    return result
 
 async def cmd_exec(cmd, shell=False):
     if shell:
