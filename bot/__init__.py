@@ -12,7 +12,7 @@ from os import path as ospath
 from os import remove as osremove
 from socket import setdefaulttimeout
 from subprocess import Popen
-from subprocess import run as srun
+from subprocess import run as srun, check_output
 from threading import Thread
 from time import sleep, time
 
