@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from asyncio import create_subprocess_exec, create_subprocess_shell, sleep
 from collections import OrderedDict
 from functools import partial
@@ -37,13 +38,13 @@ from bot.modules.torrent_search import initiate_search_tools
 START = 0
 STATE = 'view'
 handler_dict = {}
-default_values = {'AUTO_DELETE_MESSAGE_DURATION': 120,
+default_values = {'AUTO_DELETE_MESSAGE_DURATION': 30,
                   'DOWNLOAD_DIR': '/usr/src/app/downloads/',
                   'LEECH_SPLIT_SIZE': MAX_SPLIT_SIZE,
                   'RSS_DELAY': 900,
-                  'STATUS_UPDATE_INTERVAL': 15,
+                  'STATUS_UPDATE_INTERVAL': 10,
                   'SEARCH_LIMIT': 0,
-                  'UPSTREAM_BRANCH': 'hk_code'}
+                  'UPSTREAM_BRANCH': 'zh_run'}
 
 
 async def load_config():
@@ -149,7 +150,7 @@ async def load_config():
 
     STATUS_UPDATE_INTERVAL = environ.get('STATUS_UPDATE_INTERVAL', '')
     if len(STATUS_UPDATE_INTERVAL) == 0:
-        STATUS_UPDATE_INTERVAL = 15
+        STATUS_UPDATE_INTERVAL = 10
     else:
         STATUS_UPDATE_INTERVAL = int(STATUS_UPDATE_INTERVAL)
     if len(download_dict) != 0:
@@ -163,7 +164,7 @@ async def load_config():
     AUTO_DELETE_MESSAGE_DURATION = environ.get(
         'AUTO_DELETE_MESSAGE_DURATION', '')
     if len(AUTO_DELETE_MESSAGE_DURATION) == 0:
-        AUTO_DELETE_MESSAGE_DURATION = 120
+        AUTO_DELETE_MESSAGE_DURATION = 30
     else:
         AUTO_DELETE_MESSAGE_DURATION = int(AUTO_DELETE_MESSAGE_DURATION)
 
@@ -282,7 +283,7 @@ async def load_config():
 
     UPSTREAM_BRANCH = environ.get('UPSTREAM_BRANCH', '')
     if len(UPSTREAM_BRANCH) == 0:
-        UPSTREAM_BRANCH = 'hk_code'
+        UPSTREAM_BRANCH = 'zh_run'
 
     LOG_CHAT_ID = environ.get('LOG_CHAT_ID', '')
     if LOG_CHAT_ID.startswith('-100'):
@@ -330,10 +331,7 @@ async def load_config():
     STOP_DUPLICATE_TASKS = STOP_DUPLICATE_TASKS.lower() == 'true'
 
     if not STOP_DUPLICATE_TASKS and DATABASE_URL:
-        DbManger().clear_download_links()
-
-    DISABLE_DRIVE_LINK = environ.get('DISABLE_DRIVE_LINK', '')
-    DISABLE_DRIVE_LINK = DISABLE_DRIVE_LINK.lower() == 'true'
+        await DbManger().clear_download_links()
 
     DISABLE_LEECH = environ.get('DISABLE_LEECH', '')
     DISABLE_LEECH = DISABLE_LEECH.lower() == 'true'
@@ -498,7 +496,6 @@ async def load_config():
         "ENABLE_RATE_LIMIT": ENABLE_RATE_LIMIT,
         "ENABLE_MESSAGE_FILTER": ENABLE_MESSAGE_FILTER,
         "STOP_DUPLICATE_TASKS": STOP_DUPLICATE_TASKS,
-        "DISABLE_DRIVE_LINK": DISABLE_DRIVE_LINK,
         "SET_COMMANDS": SET_COMMANDS,
         "DISABLE_LEECH": DISABLE_LEECH,
         "REQUEST_LIMITS": REQUEST_LIMITS,
@@ -1014,17 +1011,12 @@ async def edit_bot_settings(client, query):
         rfunc = partial(update_buttons, message)
         await event_handler(client, query, pfunc, rfunc, True)
     elif data[1] == 'editvar' and STATE == 'edit':
-        value = config_dict[data[2]]
-        if value and data[2] in ['OWNER_ID'] and not await CustomFilters.owner(client, query):
-            value = 'Only owner can edit this!'
-            await query.answer(f'{value}', show_alert=True)
-        else:
-            handler_dict[message.chat.id] = False
-            await query.answer()
-            await update_buttons(message, data[2], data[1])
-            pfunc = partial(edit_variable, pre_message=message, key=data[2])
-            rfunc = partial(update_buttons, message, 'var')
-            await event_handler(client, query, pfunc, rfunc)
+        handler_dict[message.chat.id] = False
+        await query.answer()
+        await update_buttons(message, data[2], data[1])
+        pfunc = partial(edit_variable, pre_message=message, key=data[2])
+        rfunc = partial(update_buttons, message, 'var')
+        await event_handler(client, query, pfunc, rfunc)
     elif data[1] == 'editvar' and STATE == 'view':
         value = config_dict[data[2]]
         if value and data[2] in ['DATABASE_URL', 'TELEGRAM_API', 'TELEGRAM_HASH', 'UPSTREAM_REPO',

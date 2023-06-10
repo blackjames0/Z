@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from asyncio import sleep
 
 from pyrogram.filters import command, regex
@@ -34,7 +35,7 @@ async def cancel_mirror(client, message):
             return
     elif len(msg) == 1:
         msg = f"Reply to an active Command message which was used to start the download" \
-              f" or send <code>/{BotCommands.CancelMirror[1]} GID</code> to cancel it!"
+              f" or send <code>/{BotCommands.CancelMirror} GID</code> to cancel it!"
         await sendMessage(message, msg)
         return
 

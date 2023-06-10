@@ -1,9 +1,10 @@
+#!/usr/bin/env python3
 from time import time
 
 from pyrogram.filters import command
 from pyrogram.handlers import MessageHandler
 
-from bot import bot, config_dict
+from bot import bot
 from bot.helper.ext_utils.bot_utils import (get_readable_file_size,
                                             get_readable_time, is_gdrive_link,
                                             new_task, sync_to_async)
@@ -37,19 +38,16 @@ async def countNode(_, message):
             await sendMessage(message, name)
             return
         await deleteMessage(msg)
-        msg = f'<b>File Name</b>: <code>{name}</code>'
+        msg = f'<b>Name</b>: <code>{name}</code>'
         msg += f'\n\n<b>Size</b>: {get_readable_file_size(size)}'
-        msg += f'\n<b>Type</b>: {mime_type}'
+        msg += f'\n\n<b>Type</b>: {mime_type}'
         if mime_type == 'Folder':
             msg += f'\n<b>SubFolders</b>: {folders}'
             msg += f'\n<b>Files</b>: {files}'
-        msg += f'\n<b>Elapsed</b>: {get_readable_time(elapsed)}'
-        msg += f'\n\n<b>cc</b>: {tag}'
-        msg += f'\nThanks For Using <b>@Z_Mirror</b>'
+        msg += f'\n\n<b>cc</b>: {tag} | <b>Elapsed</b>: {get_readable_time(elapsed)}'
     else:
         msg = 'Send Gdrive link along with command or by replying to the link by command'
-    if config_dict['DELETE_LINKS']:
-        await deleteMessage(message.reply_to_message)
+
     await sendMessage(message, msg)
 
 

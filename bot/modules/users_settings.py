@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from asyncio import sleep
 from functools import partial
 from html import escape
@@ -24,7 +25,6 @@ from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper.message_utils import (editMessage, sendFile,
-                                                      auto_delete_message,
                                                       sendMessage)
 
 handler_dict = {}
@@ -86,30 +86,27 @@ async def get_user_settings(from_user):
 
     buttons.ibutton("Close", f"userset {user_id} close")
 
-    text = f"""<u>User Settings of {name}</u>
+    text = f"""<u>Settings for {name}</u>
+Leech Type is <b>{ltype}</b>
+Custom Thumbnail <b>{thumbmsg}</b>
+Rclone Config <b>{rccmsg}</b>
+Leech Split Size is <b>{split_size}</b>
+Equal Splits is <b>{equal_splits}</b>
+Media Group is <b>{media_group}</b>
+Leech Prefix is <code>{escape(lprefix)}</code>
+YT-DLP Options is <b><code>{escape(ytopt)}</code></b>"""
 
-Leech Type: <b>{ltype}</b>
-Leech Prefix: <code>{escape(lprefix)}</code>
-Leech Split Size: <b>{split_size}</b>
-
-Equal Splits: <b>{equal_splits}</b>
-Thumbnail: <b>{thumbmsg}</b>
-Media Group: <b>{media_group}</b>
-
-YT-DLP Options: <b><code>{escape(ytopt)}</code></b>
-Rclone Config: <b>{rccmsg}</b>"""
     return text, buttons.build_menu(1)
-    
+
 
 async def update_user_settings(query):
     msg, button = await get_user_settings(query.from_user)
     await editMessage(query.message, msg, button)
 
-@new_thread
+
 async def user_settings(_, message):
     msg, button = await get_user_settings(message.from_user)
-    reply_message = await sendMessage(message, msg, button)
-    await auto_delete_message(message, reply_message)
+    await sendMessage(message, msg, button)
 
 
 async def set_yt_options(_, message, pre_event):
@@ -352,13 +349,13 @@ Check all yt-dlp api options from this <a href='https://github.com/yt-dlp/yt-dlp
         rmsg = f'''
 Send Leech Prefix. Timeout: 60 sec
 Examples:
-1. <code>{escape('<b>@Z_Mirror</b>')}</code> 
+1. <code>{escape('<b>@JMDKH_Team</b>')}</code> 
 This will give output of:
-<b>@Z_Mirror</b>  <code>69MB.bin</code>.
+<b>@JMDKH_Team</b>  <code>50MB.bin</code>.
 
-2. <code>{escape('<code>@Z_Mirror</code>')}</code> 
+2. <code>{escape('<code>@JMDKH_Team</code>')}</code> 
 This will give output of:
-<code>@Z_Mirror</code> <code>69MB.bin</code>.
+<code>@JMDKH_Team</code> <code>50MB.bin</code>.
 
 Check all available formatting options <a href="https://core.telegram.org/bots/api#formatting-options">HERE</a>.
         '''

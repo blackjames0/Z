@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from pyrogram.filters import command
 from pyrogram.handlers import MessageHandler
 
@@ -23,7 +24,7 @@ async def authorize(_, message):
         update_user_ldata(id_, 'is_auth', True)
         if DATABASE_URL:
             await DbManger().update_user_data(id_)
-        msg = 'Authorized Successfully!'
+        msg = 'Authorized'
     await sendMessage(message, msg)
 
 
@@ -39,7 +40,7 @@ async def unauthorize(_, message):
         update_user_ldata(id_, 'is_auth', False)
         if DATABASE_URL:
             await DbManger().update_user_data(id_)
-        msg = 'Unauthorized Successfully!'
+        msg = 'Unauthorized'
     else:
         msg = 'Already Unauthorized!'
     await sendMessage(message, msg)
@@ -59,7 +60,7 @@ async def addSudo(_, message):
             update_user_ldata(id_, 'is_sudo', True)
             if DATABASE_URL:
                 await DbManger().update_user_data(id_)
-            msg = 'Promoted as Sudo.'
+            msg = 'Promoted as Sudo'
     else:
         msg = "Give ID or Reply To message of whom you want to Promote."
     await sendMessage(message, msg)
@@ -76,7 +77,7 @@ async def removeSudo(_, message):
         update_user_ldata(id_, 'is_sudo', False)
         if DATABASE_URL:
             await DbManger().update_user_data(id_)
-        msg = 'Demoted!'
+        msg = 'Demoted'
     else:
         msg = "Give ID or Reply To message of whom you want to remove from Sudo"
     await sendMessage(message, msg)

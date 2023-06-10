@@ -3,7 +3,6 @@ from pyrogram.handlers import CallbackQueryHandler, MessageHandler
 
 from bot import (bot, cached_dict, categories_dict, download_dict,
                  download_dict_lock)
-from bot.helper.ext_utils.help_messages import CAT_SEL_HELP_MESSAGE
 from bot.helper.ext_utils.bot_utils import (MirrorStatus, getDownloadByGid,
                                             is_gdrive_link, is_url, new_task,
                                             sync_to_async)
@@ -11,7 +10,6 @@ from bot.helper.mirror_utils.upload_utils.gdriveTools import GoogleDriveHelper
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper.message_utils import (anno_checker,
-                                                      auto_delete_message,
                                                       editMessage, isAdmin,
                                                       open_category_btns,
                                                       request_limiter,
@@ -63,8 +61,16 @@ async def change_category(client, message):
             await sendMessage(message, "This is not an active task!")
             return
     if not dl:
-        reply_message = await sendMessage(message, CAT_SEL_HELP_MESSAGE.format_map({'cmd': BotCommands.CategorySelect,'mir': BotCommands.MirrorCommand[0]}))
-        await auto_delete_message(message, reply_message)
+        msg = """
+Reply to an active /{cmd} which was used to start the download or add gid along with {cmd}
+This command mainly for change category incase you decided to change category from already added download.
+But you can always use /{mir} with to select category before download start.
+
+<b>Upload Custom Drive</b>
+<code>/{cmd}</code> <b>id:</b><code>drive_folder_link</code> or <code>drive_id</code> <b>index:</b><code>https://anything.in/0:</code> gid or by replying to active download
+drive_id must be folder id and index must be url else it will not accept
+""".format_map({'cmd': BotCommands.CategorySelect,'mir': BotCommands.MirrorCommand[0]})
+        await sendMessage(message, msg)
         return
     if not await CustomFilters.sudo(client, message) and dl.message.from_user.id != user_id:
         await sendMessage(message, "This task is not for you!")

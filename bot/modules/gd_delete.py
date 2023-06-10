@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from pyrogram.filters import command
 from pyrogram.handlers import MessageHandler
 
@@ -31,4 +32,4 @@ async def deletefile(_, message):
 
 
 bot.add_handler(MessageHandler(deletefile, filters=command(
-    BotCommands.DeleteCommand) & CustomFilters.sudo))
+    BotCommands.DeleteCommand) & CustomFilters.authorized))
