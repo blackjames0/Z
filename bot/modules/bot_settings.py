@@ -172,6 +172,9 @@ async def load_config():
     if len(YT_DLP_OPTIONS) == 0:
         YT_DLP_OPTIONS = ''
 
+    SHOW_LIMITS = environ.get('SHOW_LIMITS', '')
+    SHOW_LIMITS = SHOW_LIMITS.lower() == 'true'
+    
     SEARCH_LIMIT = environ.get('SEARCH_LIMIT', '')
     SEARCH_LIMIT = 0 if len(SEARCH_LIMIT) == 0 else int(SEARCH_LIMIT)
 
@@ -468,6 +471,7 @@ async def load_config():
         "SEARCH_API_LINK": SEARCH_API_LINK,
         "SEARCH_LIMIT": SEARCH_LIMIT,
         "SEARCH_PLUGINS": SEARCH_PLUGINS,
+        "SHOW_LIMITS": SHOW_LIMITS,
         "STATUS_LIMIT": STATUS_LIMIT,
         "STATUS_UPDATE_INTERVAL": STATUS_UPDATE_INTERVAL,
         "STOP_DUPLICATE": STOP_DUPLICATE,
