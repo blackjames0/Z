@@ -1,12 +1,11 @@
-#!/usr/bin/env python3
+import os
 from asyncio import Event
 
 from bot import (LOGGER, config_dict, non_queued_dl, non_queued_up,
                  queue_dict_lock, queued_dl, queued_up)
 from bot.helper.ext_utils.bot_utils import (get_readable_file_size, get_telegraph_list,
                                             sync_to_async)
-from bot.helper.ext_utils.fs_utils import (check_storage_threshold,
-                                           get_base_name)
+from bot.helper.ext_utils.fs_utils import check_storage_threshold, get_base_name
 from bot.helper.mirror_utils.upload_utils.gdriveTools import GoogleDriveHelper
 
 
@@ -19,11 +18,10 @@ async def stop_duplicate_check(name, listener):
     ):
         return False, None
     LOGGER.info(f'Checking File/Folder if already in Drive: {name}')
-    if listener.compress is not None:
-        name = f"{name}.zip"
-    elif listener.extract is not None:
+    base_name, ext = os.path.splitext(name)
+    if listener.extract:
         try:
-            name = get_base_name(name)
+            base_name = get_base_name(base_name)
         except:
             name = None
     if name is not None:
@@ -55,11 +53,9 @@ def start_dl_from_queued(uid):
     queued_dl[uid].set()
     del queued_dl[uid]
 
-
 def start_up_from_queued(uid):
     queued_up[uid].set()
     del queued_up[uid]
-
 
 async def start_from_queued():
     if all_limit := config_dict['QUEUE_ALL']:

@@ -1,10 +1,7 @@
-#!/usr/bin/env python3
 from asyncio import sleep
 from time import time
-
 from aiofiles.os import path as aiopath
 from aiofiles.os import remove as aioremove
-
 from bot import LOGGER, aria2, config_dict, download_dict, download_dict_lock
 from bot.helper.ext_utils.bot_utils import (bt_selection_buttons,
                                             get_telegraph_list,
@@ -14,7 +11,7 @@ from bot.helper.ext_utils.fs_utils import clean_unwanted, get_base_name
 from bot.helper.ext_utils.task_manager import limit_checker
 from bot.helper.mirror_utils.status_utils.aria2_status import Aria2Status
 from bot.helper.mirror_utils.upload_utils.gdriveTools import GoogleDriveHelper
-from bot.helper.telegram_helper.message_utils import (deleteMessage,
+from bot.helper.telegram_helper.message_utils import (deleteMessage, delete_links,
                                                       sendMessage,
                                                       update_all_messages)
 
@@ -57,9 +54,9 @@ async def __onDownloadStarted(api, gid):
                     download = download.live
                 LOGGER.info('Checking File/Folder if already in Drive...')
                 name = download.name
-                if listener.compress is not None:
+                if listener.isZip:
                     name = f"{name}.zip"
-                elif listener.extract is not None:
+                elif listener.extract:
                     try:
                         name = get_base_name(name)
                     except:
@@ -71,6 +68,7 @@ async def __onDownloadStarted(api, gid):
                         button = await get_telegraph_list(telegraph_content)
                         await listener.onDownloadError(msg, button)
                         await sync_to_async(api.remove, [download], force=True, files=True)
+                        await delete_links(listener.message)
                         return
     if any([config_dict['DIRECT_LIMIT'],
             config_dict['TORRENT_LIMIT'],
@@ -101,6 +99,7 @@ async def __onDownloadStarted(api, gid):
             if limit_exceeded := await limit_checker(size, listener, download.is_torrent):
                 await listener.onDownloadError(limit_exceeded)
                 await sync_to_async(api.remove, [download], force=True, files=True)
+                await delete_links(listener.message)
 
 
 @new_thread
@@ -118,7 +117,8 @@ async def __onDownloadComplete(api, gid):
                 if not dl.queued:
                     await sync_to_async(api.client.force_pause, new_gid)
                 SBUTTONS = bt_selection_buttons(new_gid)
-                msg = "Your download paused. Choose files then press Done Selecting button to start downloading."
+                msg = f"<b>File Name</b>: <code>{dl.name()}</code>\n\n \
+Your download paused. Choose files then press Done Selecting button to start downloading."
                 await sendMessage(listener.message, msg, SBUTTONS)
     elif download.is_torrent:
         if dl := await getDownloadByGid(gid):
@@ -211,7 +211,7 @@ async def __onDownloadError(api, gid):
 
 
 def start_aria2_listener():
-    aria2.listen_to_notifications(threaded=False,
+    aria2.listen_to_notifications(threaded=True,
                                   on_download_start=__onDownloadStarted,
                                   on_download_error=__onDownloadError,
                                   on_download_stop=__onDownloadStopped,
