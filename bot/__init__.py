@@ -549,7 +549,7 @@ if ospath.exists('accounts.zip'):
         srun(["rm", "-rf", "accounts"])
     srun(["7z", "x", "-o.", "-bd", "-aoa", "accounts.zip", "accounts/*.json"])
     srun(["chmod", "-R", "777", "accounts"])
-    remove('accounts.zip')
+    osremove('accounts.zip')
 if not ospath.exists('accounts'):
     config_dict['USE_SERVICE_ACCOUNTS'] = False
 alive = Popen(["python3", "alive.py"])
