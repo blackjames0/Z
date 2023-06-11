@@ -258,7 +258,7 @@ async def _mdisk(link, name):
 async def _ytdl(client, message, isLeech=False, sameDir=None, bulk=[]):
     text = message.text.split('\n')
     input_list = text[0].split(' ')
-    arg_base = {'link': '', '-i': 0, '-m': '', '-s': False, '-opt': '', '-b': False, '-n': '', '-z': False, '-up': '', '-rcf': ''}
+    arg_base = {'link': '', '-i': 0, '-m': '', '-s': False, '-opt': '', '-b': False, '-n': '', '-z': False, '-up': '', '-rcf': '', '-id': '', '-index': ''}
     qual = ''
     args = arg_parser(input_list[1:], arg_base)
     try:
@@ -275,8 +275,8 @@ async def _ytdl(client, message, isLeech=False, sameDir=None, bulk=[]):
     rcf = args['-rcf']
     link = args['link']
     compress = args['-z']
-    drive_id = args.drive_id
-    index_link = args.index_link
+    drive_id = args.['-id']
+    index_link = args.['-index']
     bulk_start = 0
     bulk_end = 0
     raw_url = None

@@ -45,7 +45,7 @@ async def _mirror_leech(client, message, isQbit=False, isLeech=False, sameDir=No
     input_list = text[0].split(' ')
 
     arg_base = {'link': '', '-i': 0, '-m': '', '-d': False, '-j': False, '-s': False, '-b': False,
-                '-n': '', '-e': False, '-z': False, '-up': '', '-rcf': '', '-au': '', '-ap': ''}
+                '-n': '', '-e': False, '-z': False, '-up': '', '-rcf': '', '-au': '', '-ap': '', '-id': '', '-index': ''}
 
     args = arg_parser(input_list[1:], arg_base)
 
@@ -65,8 +65,8 @@ async def _mirror_leech(client, message, isQbit=False, isLeech=False, sameDir=No
     compress = args['-z']
     extract = args['-e']
     join = args['-j']
-    drive_id = args.drive_id
-    index_link = args.index_link
+    drive_id = args.['-id']
+    index_link = args.['-index']
     bulk_start = 0
     bulk_end = 0
     ratio = None
