@@ -42,7 +42,7 @@ from bot.helper.ext_utils.bulk_links import extract_bulk_links
 @new_task
 async def _mirror_leech(client, message, isQbit=False, isLeech=False, sameDir=None, bulk=[]):
     text = message.text.split('\n')
-    input_list = text[0].split('')
+    input_list = text[0].split(' ')
     args = arg_parser(input_list[1:], arg_base)
     arg_base = {'link': '', '-i': 0, '-m': '', '-d': False, '-j': False, '-s': False, '-b': False, '-n': '', '-e': False, '-z': False, '-up': '', '-rcf': '', '-au': '', '-ap': ''}
     try:

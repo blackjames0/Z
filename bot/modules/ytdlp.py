@@ -257,7 +257,7 @@ async def _mdisk(link, name):
 @new_task
 async def _ytdl(client, message, isLeech=False, sameDir=None, bulk=[]):
     text = message.text.split('\n')
-    input_list = text[0].split('')
+    input_list = text[0].split(' ')
     arg_base = {'link': '', '-i': 0, '-m': '', '-s': False, '-opt': '', '-b': False, '-n': '', '-z': False, '-up': '', '-rcf': ''}
     qual = ''
     args = arg_parser(input_list[1:], arg_base)
