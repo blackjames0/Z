@@ -65,8 +65,8 @@ async def _mirror_leech(client, message, isQbit=False, isLeech=False, sameDir=No
     compress = args['-z']
     extract = args['-e']
     join = args['-j']
-    drive_id = args.['-id']
-    index_link = args.['-index']
+    drive_id = args['-id']
+    index_link = args['-index']
     bulk_start = 0
     bulk_end = 0
     ratio = None
