@@ -216,7 +216,8 @@ async def clone(client, message):
     dst_path = " ".join(args.upload)
     rcf = " ".join(args.rcloneFlags)
     link = " ".join(args.link)
-
+    raw_url = None
+  
     if isinstance(multi, list):
         multi = multi[0]
 
