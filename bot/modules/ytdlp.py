@@ -11,14 +11,13 @@ from aiohttp import ClientSession
 from pyrogram.filters import command, regex, user
 from pyrogram.handlers import CallbackQueryHandler, MessageHandler
 from yt_dlp import YoutubeDL
-from argparse import ArgumentParser
 
 from bot import (DOWNLOAD_DIR, IS_PREMIUM_USER, LOGGER, bot, config_dict, categories_dict,
                  user_data)
 from bot.helper.ext_utils.bot_utils import (get_readable_file_size,
                                             get_readable_time, is_gdrive_link,
                                             is_rclone_path, is_url, new_task,
-                                            new_thread, sync_to_async)
+                                            new_thread, sync_to_async, arg_parser)
 from bot.helper.ext_utils.help_messages import YT_HELP_MESSAGE
 from bot.helper.luna_utils import none_admin_utils, stop_duplicate_tasks
 from bot.helper.listeners.tasks_listener import MirrorLeechListener
@@ -258,25 +257,24 @@ async def _mdisk(link, name):
 @new_task
 async def _ytdl(client, message, isLeech=False, sameDir=None, bulk=[]):
     text = message.text.split('\n')
-    input_list = text[0].split()
+    input_list = text[0].split('')
+    arg_base = {'link': '', '-i': 0, '-m': '', '-s': False, '-opt': '', '-b': False, '-n': '', '-z': False, '-up': '', '-rcf': ''}
     qual = ''
-
+    args = arg_parser(input_list[1:], arg_base)
     try:
-        args = parser.parse_args(input_list[1:])
+        multi = int(args['-i'])
     except:
-        await sendMessage(message, YT_HELP_MESSAGE.format(cmd = message.command[0]))
-        return
+        multi = 0
 
-    select = args.select
-    multi = args.multi
-    isBulk = args.bulk
-    opt = " ".join(args.options)
-    folder_name = " ".join(args.sameDir)
-    name = " ".join(args.newName)
-    up = " ".join(args.upload)
-    rcf = " ".join(args.rcloneFlags)
-    link = " ".join(args.link)
-    compress = args.zipPswd
+    select = args['-s']
+    isBulk = args['-b']
+    opt = args['-opt']
+    folder_name = args['-m']
+    name = args['-n']
+    up = args['-up']
+    rcf = args['-rcf']
+    link = args['link']
+    compress = args['-z']
     drive_id = args.drive_id
     index_link = args.index_link
     bulk_start = 0
@@ -289,15 +287,13 @@ async def _ytdl(client, message, isLeech=False, sameDir=None, bulk=[]):
     if compress is not None:
         compress = " ".join(compress)
 
-    if isBulk:
+    if not isinstance(isBulk, bool):
         dargs = isBulk.split(':')
         bulk_start = dargs[0] or None
         if len(dargs) == 2:
             bulk_end = dargs[1] or None
         isBulk = True
-    elif isBulk is None:
-        isBulk = True
-
+    
     if folder_name and not isBulk:
         folder_name = f'/{folder_name}'
         if sameDir is None:
@@ -497,23 +493,6 @@ async def _ytdl(client, message, isLeech=False, sameDir=None, bulk=[]):
     playlist = 'entries' in result
     ydl = YoutubeDLHelper(listener)
     await ydl.add_download(link, path, name, qual, playlist, opt)
-
-
-parser = ArgumentParser(description='YT-DLP args usage:', argument_default='')
-
-parser.add_argument('link', nargs='*')
-parser.add_argument('-s', action='store_true', default=False, dest='select')
-parser.add_argument('-o', nargs='+', dest='options')
-parser.add_argument('-m', nargs='+', dest='sameDir')
-parser.add_argument('-i', nargs='+', default=0, dest='multi', type=int)
-parser.add_argument('-b', nargs='?', default=False, dest='bulk')
-parser.add_argument('-n', nargs='+', dest='newName')
-parser.add_argument('-id', nargs='*', default=None, dest='drive_id')
-parser.add_argument('-index', nargs='*', default=None, dest='index_link')
-parser.add_argument('-z', nargs='*', default=None, dest='zipPswd')
-parser.add_argument('-up', nargs='+', dest='upload')
-parser.add_argument('-rcf', nargs='+', dest='rcloneFlags')
-
 
 async def ytdl(client, message):
     _ytdl(client, message)
