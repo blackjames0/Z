@@ -275,8 +275,8 @@ async def _ytdl(client, message, isLeech=False, sameDir=None, bulk=[]):
     rcf = args['-rcf']
     link = args['link']
     compress = args['-z']
-    drive_id = args.['-id']
-    index_link = args.['-index']
+    drive_id = args['-id']
+    index_link = args['-index']
     bulk_start = 0
     bulk_end = 0
     raw_url = None
