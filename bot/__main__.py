@@ -79,25 +79,23 @@ async def stats(_, message):
     await sendMessage(message, stats)
 
 async def start(_, message):
-    token_timeout = config_dict['TOKEN_TIMEOUT']
     if len(message.command) > 1:
         userid = message.from_user.id
         input_token = message.command[1]
         if userid not in user_data:
-            return await sendMessage(message, "You do not own this token.")
+            return await sendMessage(message, 'Who are you?')
         data = user_data[userid]
         if 'token' not in data or data['token'] != input_token:
-            return await sendMessage(message, 'This token has already expired')
+            return await sendMessage(message, 'This is a token already expired')
         data['token'] = str(uuid4())
         data['time'] = time()
         user_data[userid].update(data)
-        time_str = format_validity_time(token_timeout)
-        return await sendMessage(message, f'Congratulations on acquiring a new token!\n\n<b>It will expire after {time_str}</b>') 
+        return await sendMessage(message, 'Token refreshed successfully!')
     elif config_dict['DM_MODE']:
-        start_string = f'<b>Welcome to the Era of Luna!</b>\n\nYour files or links will be sent to you here.\n'
+        start_string = 'Bot Started.\n' \
+            'Now I will send your files and links here.\n'
     else:
-        start_string = f'<b>Welcome to the Era of Luna!</b>\n\nThis bot can upload all your links or Telegram files to Google Drive, Telegram, or Rclone destination!\n'
-              
+        start_string = 'This bot can dance\n'
     await sendMessage(message, start_string)
 
 
