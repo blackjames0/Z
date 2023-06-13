@@ -70,24 +70,24 @@ MIRROR_HELP_MESSAGE = """
 <code>/{cmd} link <options></code>
 
 <b>Options:</b>
-- <code>-n new name:</code> Rename the file or folder.
-- <code>-z or -z password:</code> Zip the file or folder with or without password.
-- <code>-e or -e password:</code> Extract the file or folder with or without password.
-- <code>-up upload destination:</code> Upload the file or folder to a specific destination.
-- <code>-id drive_folder_link</code> or <code>-id drive_id -index https://anything.in/0:</code>: Upload to a custom Google Drive folder or ID.
-- <code>-au username -ap password:</code> Provide authorization for a direct link.
-- <code>-s:</code> Select a torrent file.
-- <code>-d ratio:seed_time:</code> Set the seeding ratio and time for a torrent.
-- <code>-i number of links/files:</code> Process multiple links or files.
-- <code>-m folder name:</code> Process multiple links or files within the same upload directory.
-- <code>-b:</code> Perform bulk download by replying to a text file with links.
-- <code>-j:</code> Join split files together before extracting or zipping.
-- <code>-rcf:</code> Set Rclone flags for the command.
-- <code>main:dump/ubuntu.iso</code> or <code>rcl:</code> Treat a path as an rclone download.
+• <code>-n new name:</code> Rename the file or folder.
+• <code>-z or -z password:</code> Zip the file or folder with or without password.
+• <code>-e or -e password:</code> Extract the file or folder with or without password.
+• <code>-up upload destination:</code> Upload the file or folder to a specific destination.
+• <code>-id drive_folder_link</code> or <code>-id drive_id -index https://anything.in/0:</code>: Upload to a custom Google Drive folder or ID.
+• <code>-au username -ap password:</code> Provide authorization for a direct link.
+• <code>-s:</code> Select a torrent file.
+• <code>-d ratio:seed_time:</code> Set the seeding ratio and time for a torrent.
+• <code>-i number of links/files:</code> Process multiple links or files.
+• <code>-m folder name:</code> Process multiple links or files within the same upload directory.
+• <code>-b:</code> Perform bulk download by replying to a text file with links.
+• <code>-j:</code> Join split files together before extracting or zipping.
+• <code>-rcf:</code> Set Rclone flags for the command.
+• <code>main:dump/ubuntu.iso</code> or <code>rcl:</code> Treat a path as an rclone download.
 
 <b>Note:</b>
-- <b>Commands starting with qb are specifically for torrents.</b>
-- Some commands may require additional user access or settings.
+• <b>Commands starting with qb are specifically for torrents.</b>
+• Some commands may require additional user access or settings.
 """
 
 RSS_HELP_MESSAGE = """
