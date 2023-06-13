@@ -26,11 +26,11 @@ async def mirror_status(_, message):
         count = len(download_dict)
     if count == 0:
         currentTime = get_readable_time(time() - botStartTime)
-        free = get_readable_file_size(
-            disk_usage(config_dict['DOWNLOAD_DIR']).free)
-        msg = 'No Active Downloads !\n___________________________'
-        msg += f"\n<b>CPU</b>: {cpu_percent()}% | <b>FREE</b>: {free}" \
-            f"\n<b>RAM</b>: {virtual_memory().percent}% | <b>UPTIME</b>: {currentTime}"
+        free = get_readable_file_size(disk_usage(DOWNLOAD_DIR).free)
+        msg = f"<b>Powered by Luna</b>\n\n"
+        msg += 'No Active Downloads !\n'
+        msg += f"\n<b>• Free disk space</b>: {free}"
+        msg += f"\n<b>• Bot uptime</b>: {currentTime}"
         reply_message = await sendMessage(message, msg)
         await auto_delete_message(message, reply_message)
     else:
@@ -40,9 +40,7 @@ async def mirror_status(_, message):
             if Interval:
                 Interval[0].cancel()
                 Interval.clear()
-                Interval.append(setInterval(
-                    config_dict['STATUS_UPDATE_INTERVAL'], update_all_messages))
-
+                Interval.append(setInterval(config_dict['STATUS_UPDATE_INTERVAL'], update_all_messages))
 
 @new_task
 async def status_pages(_, query):
