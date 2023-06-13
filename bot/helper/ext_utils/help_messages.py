@@ -1,73 +1,25 @@
 #!/usr/bin/env python3
 
 YT_HELP_MESSAGE = """
-<b>Send link along with command line</b>:
-<code>/{cmd}</code> link -s -n new name -opt x:y|x1:y1
+<b>To use the commands, follow this format:</b>
+<code>/{cmd} link <options></code> or replying to link </b>
+<code>/{cmd} <options></code>
 
-<b>By replying to link</b>:
-<code>/{cmd}</code> -n new name -z password -opt x:y|x1:y1
+• <code>-s:</code> Select quality for specific link or links.
+• <code>-z password:</code> Create a password-protected zip file.
+• <code>-n new_name:</code> Rename the file.
+• <code>-id drive_folder_link or drive_id -index https://anything.in/0:</code> Upload to a custom drive.
+• <code>-opt playliststart:^10|fragment_retries:^inf|matchtitle:S13|writesubtitles:true|live_from_start:true|postprocessor_args:{{"ffmpeg": ["-threads", "4"]}}|wait_for_video:(5, 100):</code> Set additional options.
+• <code>-i 10:</code> Process multiple links.
+• <code>-b:</code> Perform bulk download by replying to a text message or file with links separated with new line.
 
-<b>New Name</b>: -n
-<code>/{cmd}</code> link -n new name
-Note: Don't add file extension.
-
-<b>Upload Custom Drive</b>: link -id -index
--id <code>drive_folder_link</code> or <code>drive_id</code> -index <code>https://anything.in/0:</code>
-drive_id must be folder id and index must be url else it will not accept
-
-<b>Quality Buttons</b>: -s
-Incase default quality added from yt-dlp options using format option and you need to select quality for specific link or links with multi links feature.
-<code>/{cmd}</code> link -s
-
-<b>Zip</b>: -z password
-<code>/{cmd}</code> link -z (zip)
-<code>/{cmd}</code> link -z password (zip password protected)
-
-<b>Options</b>: -opt
-<code>/{cmd}</code> link -opt playliststart:^10|fragment_retries:^inf|matchtitle:S13|writesubtitles:true|live_from_start:true|postprocessor_args:{{"ffmpeg": ["-threads", "4"]}}|wait_for_video:(5, 100)
-Note: Add `^` before integer or float, some values must be numeric and some string.
-Like playlist_items:10 works with string, so no need to add `^` before the number but playlistend works only with integer so you must add `^` before the number like example above.
-You can add tuple and dict also. Use double quotes inside dict.
-
-<b>Multi links only by replying to first link</b>: -i
-<code>/{cmd}</code> -i 10(number of links)
-
-<b>Multi links within same upload directory only by replying to first link</b>: -m
-<code>/{cmd}</code> -i 10(number of links) -m folder name
-
-<b>Upload</b>: -up
-<code>/{cmd}</code> link -up <code>rcl</code> (To select rclone config, remote and path)
-You can directly add the upload path: -up remote:dir/subdir
-If DEFAULT_UPLOAD is `rc` then you can pass up: `gd` to upload using gdrive tools to GDRIVE_ID.
-If DEFAULT_UPLOAD is `gd` then you can pass up: `rc` to upload to RCLONE_PATH.
-If you want to add path manually from your config (uploaded from usetting) add <code>mrcc:</code> before the path without space
-<code>/{cmd}</code> link -up <code>mrcc:</code>main:dump
-
-<b>Rclone Flags</b>: -rcf
-<code>/{cmd}</code> link -up path|rcl -rcf --buffer-size:8M|--drive-starred-only|key|key:value
-This will override all other flags except --exclude
-Check here all <a href='https://rclone.org/flags/'>RcloneFlags</a>.
-
-<b>Bulk Download</b>: -b
-Bulk can be used by text message and by replying to text file contains links seperated by new line.
-You can use it only by reply to message(text/file).
-All options should be along with link!
-Example:
-link1 -n new name -up remote1:path1 -rcf |key:value|key:value
-link2 -z -n new name -up remote2:path2
-link3 -e -n new name -opt ytdlpoptions
-Note: You can't add -m arg for some links only, do it for all links or use multi without bulk!
-link pswd: pass(zip/unzip) opt: ytdlpoptions up: remote2:path2
-Reply to this example by this cmd <code>/{cmd}</code> b(bulk)
-You can set start and end of the links from the bulk with -b start:end or only end by -b :end or only start by -b start. The default start is from zero(first link) to inf.
-
-
-Check all yt-dlp api options from this <a href='https://github.com/yt-dlp/yt-dlp/blob/master/yt_dlp/YoutubeDL.py#L184'>FILE</a> or use this <a href='https://t.me/mltb_official_channel/177'>script</a> to convert cli arguments to api options.
+<b>Check all yt-dlp api options from this <a href='https://github.com/yt-dlp/yt-dlp/blob/master/yt_dlp/YoutubeDL.py#L184'>FILE</a> or use this <a href='https://t.me/mltb_official_channel/177'>script</a> to convert cli arguments to api options.</b>
 """
 
 MIRROR_HELP_MESSAGE = """
 <b>To use the commands, follow this format:</b>
-<code>/{cmd} link <options></code>
+<code>/{cmd} link <options></code> or replying to link </b>
+<code>/{cmd} <options></code>
 
 <b>Options:</b>
 • <code>-n new name:</code> Rename the file or folder.
@@ -80,7 +32,7 @@ MIRROR_HELP_MESSAGE = """
 • <code>-d ratio:seed_time:</code> Set the seeding ratio and time for a torrent.
 • <code>-i number of links/files:</code> Process multiple links or files.
 • <code>-m folder name:</code> Process multiple links or files within the same upload directory.
-• <code>-b:</code> Perform bulk download by replying to a text file with links.
+• <code>-b:</code> Perform bulk download by replying to a text message or file with multiple links separated with new line.
 • <code>-j:</code> Join split files together before extracting or zipping.
 • <code>-rcf:</code> Set Rclone flags for the command.
 • <code>main:dump/ubuntu.iso</code> or <code>rcl:</code> Treat a path as an rclone download.
