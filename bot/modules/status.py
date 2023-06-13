@@ -5,19 +5,11 @@ from psutil import cpu_percent, disk_usage, virtual_memory
 from pyrogram.filters import command, regex
 from pyrogram.handlers import CallbackQueryHandler, MessageHandler
 
-from bot import (Interval, bot, botStartTime, config_dict, download_dict,
-                 download_dict_lock, status_reply_dict_lock)
-from bot.helper.ext_utils.bot_utils import (get_readable_file_size,
-                                            get_readable_time, new_task,
-                                            setInterval, turn_page)
+from bot import Interval, bot, botStartTime, config_dict, download_dict, download_dict_lock, status_reply_dict_lock
+from bot.helper.ext_utils.bot_utils import get_readable_file_size, get_readable_time, new_task, setInterval, turn_page
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.filters import CustomFilters
-from bot.helper.telegram_helper.message_utils import (auto_delete_message,
-                                                      deleteMessage, isAdmin,
-                                                      request_limiter,
-                                                      sendMessage,
-                                                      sendStatusMessage,
-                                                      update_all_messages)
+from bot.helper.telegram_helper.message_utils import auto_delete_message, deleteMessage, isAdmin, request_limiter, sendMessage, sendStatusMessage, update_all_messages
 
 
 @new_task
