@@ -2,8 +2,8 @@
 
 YT_HELP_MESSAGE = """
 <b>To use the commands, follow this format:</b>
-<code>/{cmd} link <options></code> or replying to link </b>
-<code>/{cmd} <options></code>
+<code>/{cmd} link options</code> or replying to link </b>
+<code>/{cmd} options</code>
 
 • <code>-s:</code> Select quality for specific link or links.
 • <code>-z password:</code> Create a password-protected zip file.
@@ -18,8 +18,8 @@ YT_HELP_MESSAGE = """
 
 MIRROR_HELP_MESSAGE = """
 <b>To use the commands, follow this format:</b>
-<code>/{cmd} link <options></code> or replying to link </b>
-<code>/{cmd} <options></code>
+<code>/{cmd} link options</code> or replying to link </b>
+<code>/{cmd} options</code>
 
 <b>Options:</b>
 • <code>-n new name:</code> Rename the file or folder.
