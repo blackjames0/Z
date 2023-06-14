@@ -133,7 +133,7 @@ def progress_bar(pct):
     return p_str
 
 def get_readable_message():
-    msg = "<b>Powered by Luna</b>\n\n"
+    msg = ''
     button = None
     STATUS_LIMIT = config_dict['STATUS_LIMIT']
     tasks = len(download_dict)
@@ -146,7 +146,7 @@ def get_readable_message():
         msg += f"by {download.extra_details['source']}</i>\n\n"
         msg += f"<b>┌ {download.status()} with {download.engine}</b>"
         if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING]:
-            msg += f"\n<b>├ <a href='https://github.com/5hojib/Luna'>{progress_bar(download.progress())}</a></b> {download.progress()}"
+            msg += f"\n<b>├ {progress_bar(download.progress())}</b> {download.progress()}"
             msg += f"\n<b>├ </b>{download.processed_bytes()} of {download.size()}"
             msg += f"\n<b>├ Speed</b>: {download.speed()}"
             msg += f'\n<b>├ Estimated</b>: {download.eta()}'

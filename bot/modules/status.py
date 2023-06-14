@@ -19,8 +19,7 @@ async def mirror_status(_, message):
     if count == 0:
         currentTime = get_readable_time(time() - botStartTime)
         free = get_readable_file_size(disk_usage(config_dict['DOWNLOAD_DIR']).free)
-        msg = f"<b>Powered by Luna</b>\n\n"
-        msg += 'No Active Downloads !\n'
+        msg = 'No Active Downloads !\n'
         msg += f"\n<b>• Bot uptime</b>: {currentTime}"
         msg += f"\n<b>• Free disk space</b>: {free}"
         reply_message = await sendMessage(message, msg)

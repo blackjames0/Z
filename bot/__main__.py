@@ -94,9 +94,9 @@ async def start(_, message):
         time_str = format_validity_time(token_timeout)
         return await sendMessage(message, f'Congratulations on acquiring a new token!\n\n<b>It will expire after {time_str}</b>') 
     elif config_dict['DM_MODE']:
-        start_string = f'<b>Welcome to the Era of Luna!</b>\n\nYour files or links will be sent to you here.\n'
+        start_string = f'<b>Welcome!</b>\n\nYour files or links will be sent to you here.\n'
     else:
-        start_string = f'<b>Welcome to the Era of Luna!</b>\n\nThis bot can upload all your links or Telegram files to Google Drive, Telegram, or Rclone destination!\n'
+        start_string = f'<b>Welcome!</b>\n\nThis bot can upload all your links or Telegram files to Google Drive, Telegram, or Rclone destination!\n'
               
     await sendMessage(message, start_string)
 
