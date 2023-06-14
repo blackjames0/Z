@@ -22,24 +22,24 @@ MIRROR_HELP_MESSAGE = """
 <code>/{cmd} options</code>
 
 <b>Options:</b>
-• <b>-n new name:</b> Rename the file or folder.
-• <b>-z or -z password:</b> Zip the file or folder with or without password.
-• <b>-e or -e password:</b> Extract the file or folder with or without password.
-• <b>-up upload destination:</b> Upload the file or folder to a specific destination.
-• <b>-id drive_folder_link</b> or <b>-id drive_id -index https://anything.in/0:</b>: Upload to a custom Google Drive folder or ID.
-• <b>-au username -ap password:</b> Provide authorization for a direct link.
-• <b>-s:</b> Select a torrent file.
-• <b>-d ratio:seed_time:</b> Set the seeding ratio and time for a torrent.
-• <b>-i number of links/files:</b> Process multiple links or files.
-• <b>-m folder name:</b> Process multiple links or files within the same upload directory.
-• <b>-b:</b> Perform bulk download by replying to a text message or file with multiple links separated with new line.
-• <b>-j:</b> Join split files together before extracting or zipping.
-• <b>-rcf:</b> Set Rclone flags for the command.
-• <b>main:dump/ubuntu.iso</b> or <b>rcl:</b> Treat a path as an rclone download.
+<b>-n new name:</b> Rename the file or folder.
+<b>-z or -z password:</b> Zip the file or folder with or without password.
+<b>-e or -e password:</b> Extract the file or folder with or without password.
+<b>-up upload destination:</b> Upload the file or folder to a specific destination.
+<b>-id drive_folder_link</b> or <b>-id drive_id -index https://anything.in/0:</b>: Upload to a custom Google Drive folder or ID.
+<b>-au username -ap password:</b> Provide authorization for a direct link.
+<b>-s:</b> Select a torrent file.
+<b>-d ratio:seed_time:</b> Set the seeding ratio and time for a torrent.
+<b>-i number of links/files:</b> Process multiple links or files.
+<b>-m folder name:</b> Process multiple links or files within the same upload directory.
+<b>-b:</b> Perform bulk download by replying to a text message or file with multiple links separated with new line.
+<b>-j:</b> Join split files together before extracting or zipping.
+<b>-rcf:</b> Set Rclone flags for the command.
+<b>main:dump/ubuntu.iso</b> or <b>rcl:</b> Treat a path as an rclone download.
 
 <b>Note:</b>
-• <b>Commands starting with qb are specifically for torrents.</b>
-• Some commands may require additional user access or settings.
+<b>Commands starting with qb are specifically for torrents.</b>
+Some commands may require additional user access or settings.
 """
 
 RSS_HELP_MESSAGE = """
