@@ -38,17 +38,17 @@ PAGE_NO = 1
 
 
 class MirrorStatus:
-    STATUS_UPLOADING = "Upload"
-    STATUS_DOWNLOADING = "Download"
-    STATUS_CLONING = "Clone"
-    STATUS_QUEUEDL = "QueueDl"
-    STATUS_QUEUEUP = "QueueUp"
-    STATUS_PAUSED = "Pause"
-    STATUS_ARCHIVING = "Archive"
-    STATUS_EXTRACTING = "Extract"
-    STATUS_SPLITTING = "Split"
-    STATUS_CHECKING = "CheckUp"
-    STATUS_SEEDING = "Seed"
+    STATUS_UPLOADING = "Uploading"
+    STATUS_DOWNLOADING = "Downloading"
+    STATUS_CLONING = "Cloning"
+    STATUS_QUEUEDL = "Queued"
+    STATUS_QUEUEUP = "Queued"
+    STATUS_PAUSED = "Paused"
+    STATUS_ARCHIVING = "Archiving"
+    STATUS_EXTRACTING = "Extracting"
+    STATUS_SPLITTING = "Splitting"
+    STATUS_CHECKING = "Checking"
+    STATUS_SEEDING = "Seeding"
 
 
 class setInterval:
@@ -142,7 +142,8 @@ def get_readable_message():
         globals()['STATUS_START'] = STATUS_LIMIT * (PAGES - 1)
         globals()['PAGE_NO'] = PAGES
     for download in list(download_dict.values())[STATUS_START:STATUS_LIMIT+STATUS_START]:
-        msg += f"<i>{escape(f'{download.name()}')}\nby {download.extra_details['source']}</i>\n\n"
+        msg += f"<i>{escape(f'{download.name()}')}\n"
+        msg += f"by {download.extra_details['source']}</i>\n\n"
         msg += f"<b>┌ {download.status()} with {download.engine}</b>"
         if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING]:
             msg += f"\n<b>├ <a href='https://github.com/5hojib/Luna'>{progress_bar(download.progress())}</a></b> {download.progress()}"

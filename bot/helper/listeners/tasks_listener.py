@@ -116,7 +116,10 @@ class MirrorLeechListener:
             elif not reply_to.from_user.is_bot:
                 source = reply_to.from_user.username or reply_to.from_user.id
         if self.isSuperGroup:
-            self.extra_details['source'] = f"<a href='{self.message.link}'>{source}</a>"
+            if config_dict['DELETE_LINK']:
+                self.extra_details['source'] = f"<i>{source}</i>"
+            else:
+                self.extra_details['source'] = f"<a href='{self.message.link}'>{source}</a>"
         else:
             self.extra_details['source'] = f"<i>{source}</i>"
 
