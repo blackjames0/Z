@@ -5,13 +5,13 @@ YT_HELP_MESSAGE = """
 <code>/{cmd} link options</code> or replying to link </b>
 <code>/{cmd} options</code>
 
-• <code>-s:</code> Select quality for specific link or links.
-• <code>-z password:</code> Create a password-protected zip file.
-• <code>-n new_name:</code> Rename the file.
-• <code>-id drive_folder_link or drive_id -index https://anything.in/0:</code> Upload to a custom drive.
-• <code>-opt playliststart:^10|fragment_retries:^inf|matchtitle:S13|writesubtitles:true|live_from_start:true|postprocessor_args:{{"ffmpeg": ["-threads", "4"]}}|wait_for_video:(5, 100):</code> Set additional options.
-• <code>-i 10:</code> Process multiple links.
-• <code>-b:</code> Perform bulk download by replying to a text message or file with links separated with new line.
+<b>-s:</b> Select quality for specific link or links.
+<b>-z password:</b> Create a password-protected zip file.
+<b>-n new_name:</b> Rename the file.
+<b>-id drive_folder_link or drive_id -index https://anything.in/0:</b> Upload to a custom drive.
+<b>-opt playliststart:^10|fragment_retries:^inf|matchtitle:S13|writesubtitles:true|live_from_start:true|postprocessor_args:{{"ffmpeg": ["-threads", "4"]}}|wait_for_video:(5, 100):</b> Set additional options.
+<b>-i 10:</b> Process multiple links.
+<b>-b:</b> Perform bulk download by replying to a text message or file with links separated with new line.
 
 <b>Check all yt-dlp api options from this <a href='https://github.com/yt-dlp/yt-dlp/blob/master/yt_dlp/YoutubeDL.py#L184'>FILE</a> or use this <a href='https://t.me/mltb_official_channel/177'>script</a> to convert cli arguments to api options.</b>
 """
@@ -22,20 +22,20 @@ MIRROR_HELP_MESSAGE = """
 <code>/{cmd} options</code>
 
 <b>Options:</b>
-• <code>-n new name:</code> Rename the file or folder.
-• <code>-z or -z password:</code> Zip the file or folder with or without password.
-• <code>-e or -e password:</code> Extract the file or folder with or without password.
-• <code>-up upload destination:</code> Upload the file or folder to a specific destination.
-• <code>-id drive_folder_link</code> or <code>-id drive_id -index https://anything.in/0:</code>: Upload to a custom Google Drive folder or ID.
-• <code>-au username -ap password:</code> Provide authorization for a direct link.
-• <code>-s:</code> Select a torrent file.
-• <code>-d ratio:seed_time:</code> Set the seeding ratio and time for a torrent.
-• <code>-i number of links/files:</code> Process multiple links or files.
-• <code>-m folder name:</code> Process multiple links or files within the same upload directory.
-• <code>-b:</code> Perform bulk download by replying to a text message or file with multiple links separated with new line.
-• <code>-j:</code> Join split files together before extracting or zipping.
-• <code>-rcf:</code> Set Rclone flags for the command.
-• <code>main:dump/ubuntu.iso</code> or <code>rcl:</code> Treat a path as an rclone download.
+• <b>-n new name:</b> Rename the file or folder.
+• <b>-z or -z password:</b> Zip the file or folder with or without password.
+• <b>-e or -e password:</b> Extract the file or folder with or without password.
+• <b>-up upload destination:</b> Upload the file or folder to a specific destination.
+• <b>-id drive_folder_link</b> or <b>-id drive_id -index https://anything.in/0:</b>: Upload to a custom Google Drive folder or ID.
+• <b>-au username -ap password:</b> Provide authorization for a direct link.
+• <b>-s:</b> Select a torrent file.
+• <b>-d ratio:seed_time:</b> Set the seeding ratio and time for a torrent.
+• <b>-i number of links/files:</b> Process multiple links or files.
+• <b>-m folder name:</b> Process multiple links or files within the same upload directory.
+• <b>-b:</b> Perform bulk download by replying to a text message or file with multiple links separated with new line.
+• <b>-j:</b> Join split files together before extracting or zipping.
+• <b>-rcf:</b> Set Rclone flags for the command.
+• <b>main:dump/ubuntu.iso</b> or <b>rcl:</b> Treat a path as an rclone download.
 
 <b>Note:</b>
 • <b>Commands starting with qb are specifically for torrents.</b>
